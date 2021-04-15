@@ -27,5 +27,8 @@ private slots:
 private:
   Ui::DailyHelper *ui;
   Registros *registros;
+
+  QVector<QVector<QString>> tasks;
+  QVector<float> time;
 };
 #endif // DAILYHELPER_H
