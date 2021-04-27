@@ -15,23 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTableWidget" name="tableWidget">
-     <column>
-      <property name="text">
-       <string>Teste 1</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Titulo</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Tempo</string>
-      </property>
-     </column>
-    </widget>
+    <widget class="QTableView" name="tableView"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -78,7 +62,7 @@
      <item>
       <widget class="QPushButton" name="pushButton_3">
        <property name="text">
-        <string>PushButton</string>
+        <string>Salvar mudanças</string>
        </property>
       </widget>
      </item>

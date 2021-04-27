@@ -11,11 +11,13 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     dailyhelper.cpp \
-    registros.cpp
+    registros.cpp \
+    tasktype.cpp
 
 HEADERS += \
     dailyhelper.h \
-    registros.h
+    registros.h \
+    tasktype.h
 
 FORMS += \
     dailyhelper.ui \

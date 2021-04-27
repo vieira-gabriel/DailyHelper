@@ -2,6 +2,7 @@
 #define DAILYHELPER_H
 
 #include "registros.h"
+#include "tasktype.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -28,7 +29,6 @@ private:
   Ui::DailyHelper *ui;
   Registros *registros;
 
-  QVector<QVector<QString>> tasks;
-  QVector<float> time;
+  QVector<TaskType> tasks;
 };
 #endif // DAILYHELPER_H
