@@ -15,6 +15,7 @@ public:
   explicit Registros(QWidget *parent = nullptr);
   ~Registros();
   void setTasks(QVector<TaskType> &);
+  void loadTasks();
 
 private slots:
   void on_edit_bt_clicked();
@@ -23,6 +24,7 @@ private:
   Ui::Registros *ui;
 
   QVector<TaskType> tasks;
+  enum TasksColumns { TITLE, RESUME, TIME };
 };
 
 #endif // REGISTROS_H

@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QPixmap>
+#include <QtSql>
 
 float round_float(float input) {
   int num_int = (input * 1000) + 5;
@@ -66,6 +67,7 @@ void DailyHelper::on_registerButton_clicked() {
 void DailyHelper::on_reportButton_clicked() {
   registros = new Registros(this);
   registros->setTasks(tasks);
+  registros->loadTasks();
   registros->show();
 }
 
