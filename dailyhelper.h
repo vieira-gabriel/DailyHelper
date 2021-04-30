@@ -3,7 +3,13 @@
 
 #include "registros.h"
 #include "tasktype.h"
+#include <QDebug>
+#include <QDir>
+#include <QFile>
 #include <QMainWindow>
+#include <QMessageBox>
+#include <QPixmap>
+#include <QtSql>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -30,5 +36,7 @@ private:
   Registros *registros;
 
   QVector<TaskType> tasks;
+  QDir database_dir;
+  QSqlDatabase database;
 };
 #endif // DAILYHELPER_H

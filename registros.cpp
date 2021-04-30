@@ -32,8 +32,8 @@ void Registros::loadTasks() {
                              new QTableWidgetItem(tasks[row].getTitle()));
     ui->tableWidget->setItem(row, RESUME,
                              new QTableWidgetItem(tasks[row].getResume()));
-    ui->tableWidget->setItem(row, TIME,
-                             new QTableWidgetItem(tasks[row].getTime()));
+    ui->tableWidget->setItem(
+        row, TIME, new QTableWidgetItem(QString::number(tasks[row].getTime())));
   }
   ui->tableWidget->show();
 }
