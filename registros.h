@@ -3,6 +3,8 @@
 
 #include "tasktype.h"
 #include <QDialog>
+#include <QDir>
+#include <QtSql>
 
 namespace Ui {
 class Registros;
@@ -20,11 +22,17 @@ public:
 private slots:
   void on_edit_bt_clicked();
 
+  void on_pushButton_3_clicked();
+
+  void on_delete_bt_clicked();
+
 private:
   Ui::Registros *ui;
 
   QVector<TaskType> tasks;
-  enum TasksColumns { TITLE, RESUME, TIME };
+  QDir database_dir;
+  QSqlDatabase database;
+  enum TasksColumns { ID, TITLE, RESUME, TIME };
 };
 
 #endif // REGISTROS_H
