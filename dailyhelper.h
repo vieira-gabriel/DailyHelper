@@ -38,5 +38,7 @@ private:
   QVector<TaskType> tasks;
   QDir database_dir;
   QSqlDatabase database;
+
+  enum TasksColumns { ID, TITLE, RESUME, TIME };
 };
 #endif // DAILYHELPER_H

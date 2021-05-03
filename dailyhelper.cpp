@@ -56,6 +56,7 @@ DailyHelper::DailyHelper(QWidget *parent)
   database = QSqlDatabase::addDatabase("QSQLITE");
 
   database.setDatabaseName(database_dir.absolutePath() + "/db_tasks.db");
+
   if (!database.open()) {
     qDebug() << "Falha ao abrir o banco de dados";
     return;
@@ -71,6 +72,19 @@ void DailyHelper::on_registerButton_clicked() {
   QDateTime startDateTime = ui->dt_Start->dateTime();
   QDateTime finishDateTime = ui->dt_End->dateTime();
 
+  if (!database.isOpen()) {
+    qDebug() << "Banco de dados está fechado. Abrindo o acesso...";
+    database.close();
+    database = QSqlDatabase::addDatabase("QSQLITE");
+    database.setDatabaseName(database_dir.absolutePath() + "/db_tasks.db");
+    qDebug() << database_dir.absolutePath();
+    if (!database.open()) {
+      qDebug() << "Falha ao abrir o banco de dados";
+      qDebug() << database.lastError().text();
+      return;
+    }
+  }
+
   QSqlQuery query;
 
   bool task_already_exists = false;
@@ -78,30 +92,47 @@ void DailyHelper::on_registerButton_clicked() {
   float howLong =
       round_float((float)(startDateTime.secsTo(finishDateTime)) / 3600);
 
-  for (int i = 0; i < tasks.size(); ++i) {
-    if (tasks[i].getTitle() == title) {
-      qDebug() << "Task already registrated";
-      tasks[i].setTime(tasks[i].getTime() + howLong);
-      task_already_exists = true;
-      if (resume != "" && resume != tasks[i].getResume()) {
-        QMessageBox::StandardButton answer = QMessageBox::question(
-            this, "Resumo diferente", "Deseja sobrescrever o resumo?",
-            QMessageBox::Yes | QMessageBox::No);
-        if (answer == QMessageBox::Yes) {
-          tasks[i].setResume(resume);
+  // Verifica se a tarefa já foi registrada em outro momento. Caso seja, vai
+  // somar a hora colocada e atualizar o resumo, caso o usuário deseje
+  if (query.exec("SELECT * FROM Tasks")) {
+    for (int row = 0; query.next(); ++row) {
+      if (query.value(TITLE).toString() == title) {
+        task_already_exists = true;
+        qDebug() << "Task " + query.value(TITLE).toString() +
+                        " already registrated";
+        float newTime = query.value(TIME).toFloat();
+        howLong += newTime;
+        QString lastResume = query.value(RESUME).toString();
+        qDebug() << howLong;
+
+        query.prepare("UPDATE Tasks SET time= :time WHERE task= :title");
+        query.bindValue(":time", round_float(howLong));
+        query.bindValue(":title", title);
+        if (!query.exec()) {
+          qDebug() << "Erro ao editar valor no banco de dados";
+          qDebug() << query.lastError().text();
+        } else {
+          if (resume != "" && resume != lastResume) {
+            QMessageBox::StandardButton answer = QMessageBox::question(
+                this, "Resumo diferente", "Deseja sobrescrever o resumo?",
+                QMessageBox::Yes | QMessageBox::No);
+            if (answer == QMessageBox::Yes) {
+              query.exec("UPDATE Tasks SET resume = " + resume +
+                         " WHERE title = " + title);
+            }
+          }
+          break;
         }
       }
-      break;
     }
+  } else {
+    QMessageBox::warning(this, "ERRO",
+                         "Erro ao pesquisar na tabela de contatos");
+    qDebug() << query.lastError().text();
   }
 
-  if (!task_already_exists) {
-    TaskType new_task;
-    new_task.setTitle(title);
-    new_task.setResume(resume);
-    new_task.setTime(howLong);
-    tasks.append(new_task);
-
+  // Cria um novo registro, caso não exista um com o titulo recebido
+  if (!task_already_exists && title != "" && resume != "") {
     if (!query.prepare("INSERT INTO Tasks(task, resume, time) VALUES(:task, "
                        ":resume, :time)")) {
       qDebug() << query.lastError().text();
@@ -123,6 +154,7 @@ void DailyHelper::on_registerButton_clicked() {
 }
 
 void DailyHelper::on_reportButton_clicked() {
+  database.close();
   registros = new Registros(this);
   registros->setTasks(tasks);
   registros->loadTasks();
