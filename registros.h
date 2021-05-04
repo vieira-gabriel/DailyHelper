@@ -1,7 +1,6 @@
 #ifndef REGISTROS_H
 #define REGISTROS_H
 
-#include "tasktype.h"
 #include <QDialog>
 #include <QDir>
 #include <QtSql>
@@ -16,7 +15,6 @@ class Registros : public QDialog {
 public:
   explicit Registros(QWidget *parent = nullptr);
   ~Registros();
-  void setTasks(QVector<TaskType> &);
   void loadTasks();
 
 private slots:
@@ -29,7 +27,6 @@ private slots:
 private:
   Ui::Registros *ui;
 
-  QVector<TaskType> tasks;
   QDir database_dir;
   QSqlDatabase database;
   enum TasksColumns { ID, TITLE, RESUME, TIME };

@@ -72,19 +72,6 @@ void DailyHelper::on_registerButton_clicked() {
   QDateTime startDateTime = ui->dt_Start->dateTime();
   QDateTime finishDateTime = ui->dt_End->dateTime();
 
-  if (!database.isOpen()) {
-    qDebug() << "Banco de dados está fechado. Abrindo o acesso...";
-    database.close();
-    database = QSqlDatabase::addDatabase("QSQLITE");
-    database.setDatabaseName(database_dir.absolutePath() + "/db_tasks.db");
-    qDebug() << database_dir.absolutePath();
-    if (!database.open()) {
-      qDebug() << "Falha ao abrir o banco de dados";
-      qDebug() << database.lastError().text();
-      return;
-    }
-  }
-
   QSqlQuery query;
 
   bool task_already_exists = false;
@@ -154,9 +141,7 @@ void DailyHelper::on_registerButton_clicked() {
 }
 
 void DailyHelper::on_reportButton_clicked() {
-  database.close();
   registros = new Registros(this);
-  registros->setTasks(tasks);
   registros->loadTasks();
   registros->show();
 }

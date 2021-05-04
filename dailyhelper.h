@@ -2,7 +2,6 @@
 #define DAILYHELPER_H
 
 #include "registros.h"
-#include "tasktype.h"
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -35,7 +34,6 @@ private:
   Ui::DailyHelper *ui;
   Registros *registros;
 
-  QVector<TaskType> tasks;
   QDir database_dir;
   QSqlDatabase database;
 
